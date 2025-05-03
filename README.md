@@ -187,4 +187,4 @@ For questions or feedback, please open an issue on GitHub or contact the project
 
 ---
 
-Made with ❤️ by [Your Name]
+Made with ❤️ by Nitin C
