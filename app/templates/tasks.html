@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}Tasks - Amazon Task Manager{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Your Tasks</h1>
+    <a href="{{ url_for('new_task') }}" class="btn btn-warning">
+        <i class="fas fa-plus-circle me-2"></i>New Task
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header bg-dark text-white">
+        <i class="fas fa-tasks me-2"></i>Task List
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in tasks %}
+                    <tr>
+                        <td>{{ task.title }}</td>
+                        <td>{{ task.description|truncate(50) }}</td>
+                        <td>
+                            {% if task.priority == 'Low' %}
+                                <span class="badge bg-info">{{ task.priority }}</span>
+                            {% elif task.priority == 'Normal' %}
+                                <span class="badge bg-success">{{ task.priority }}</span>
+                            {% elif task.priority == 'High' %}
+                                <span class="badge bg-warning text-dark">{{ task.priority }}</span>
+                            {% else %}
+                                <span class="badge bg-danger">{{ task.priority }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if task.status == 'To Do' %}
+                                <span class="badge bg-secondary">{{ task.status }}</span>
+                            {% elif task.status == 'In Progress' %}
+                                <span class="badge bg-primary">{{ task.status }}</span>
+                            {% else %}
+                                <span class="badge bg-success">{{ task.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ task.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a href="{{ url_for('edit_task', task_id=task.id) }}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ task.id }}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                            
+                            <!-- Delete Modal -->
+                            <div class="modal fade" id="deleteModal{{ task.id }}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            Are you sure you want to delete the task "{{ task.title }}"?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <form action="{{ url_for('delete_task', task_id=task.id) }}" method="post">
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center">No tasks found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                <i class="fas fa-clipboard-list me-2"></i>To Do
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{ tasks|selectattr('status', 'equalto', 'To Do')|list|length }} tasks</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <i class="fas fa-spinner me-2"></i>In Progress
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{ tasks|selectattr('status', 'equalto', 'In Progress')|list|length }} tasks</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <i class="fas fa-check-circle me-2"></i>Done
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{ tasks|selectattr('status', 'equalto', 'Done')|list|length }} tasks</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

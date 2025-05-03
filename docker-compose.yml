@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:14
+    container_name: amazon-tasks-db
+    environment:
+      POSTGRES_USER: amazon
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: taskdb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    networks:
+      - amazon-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U amazon -d taskdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  web:
+    build: ./app
+    container_name: amazon-tasks-web
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://amazon:password@db:5432/taskdb
+      FLASK_APP: app.py
+      FLASK_ENV: production
+      SECRET_KEY: ${SECRET_KEY:-amazon-task-manager-secret-key}
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./app:/app
+      - ./logs:/app/logs
+    networks:
+      - amazon-network
+    restart: unless-stopped
+    command: gunicorn --bind 0.0.0.0:5000 --workers 4 --access-logfile - app:app
+
+  nginx:
+    image: nginx:1.23-alpine
+    container_name: amazon-tasks-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/logs:/var/log/nginx
+      - ./app/static:/static
+    depends_on:
+      - web
+    networks:
+      - amazon-network
+    restart: unless-stopped
+
+networks:
+  amazon-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

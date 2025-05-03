@@ -1,0 +1,90 @@
+/* Amazon-themed styles */
+:root {
+    --amazon-orange: #FF9900;
+    --amazon-dark: #232F3E;
+    --amazon-light: #FEBD69;
+}
+
+body {
+    font-family: 'Amazon Ember', Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.navbar-dark {
+    background-color: var(--amazon-dark) !important;
+}
+
+.btn-warning {
+    background-color: var(--amazon-orange);
+    border-color: var(--amazon-orange);
+}
+
+.btn-warning:hover {
+    background-color: var(--amazon-light);
+    border-color: var(--amazon-light);
+}
+
+.card-header.bg-warning {
+    background-color: var(--amazon-orange) !important;
+}
+
+footer {
+    margin-top: auto;
+}
+
+/* Task priority colors */
+.badge.bg-info {
+    background-color: #17a2b8 !important;
+}
+
+.badge.bg-success {
+    background-color: #28a745 !important;
+}
+
+.badge.bg-warning {
+    background-color: var(--amazon-orange) !important;
+}
+
+.badge.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+/* Task status colors */
+.badge.bg-secondary {
+    background-color: #6c757d !important;
+}
+
+.badge.bg-primary {
+    background-color: #007bff !important;
+}
+
+/* Error page styling */
+.error-container {
+    text-align: center;
+    padding: 40px 0;
+}
+
+.error-code {
+    font-size: 120px;
+    color: var(--amazon-orange);
+    margin-bottom: 0;
+}
+
+.error-message {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Loading spinner */
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+}
+
+.spinner-border {
+    color: var(--amazon-orange);
+}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}{{ error_code }} - Amazon Task Manager{% endblock %}
+
+{% block content %}
+<div class="error-container">
+    <h1 class="error-code">{{ error_code }}</h1>
+    <p class="error-message">{{ error_message }}</p>
+    <div class="mb-4">
+        <p>{{ error_description }}</p>
+    </div>
+    <a href="{{ url_for('index') }}" class="btn btn-warning">
+        <i class="fas fa-home me-2"></i>Return to Home
+    </a>
+</div>
+{% endblock %}

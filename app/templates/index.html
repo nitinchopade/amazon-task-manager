@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="jumbotron bg-light p-5 rounded">
+    <h1 class="display-4">Welcome to Amazon Task Manager</h1>
+    <p class="lead">Manage your tasks with the efficiency of Amazon's delivery system!</p>
+    <hr class="my-4">
+    <p>Get started by creating a new task or viewing your existing tasks.</p>
+    <a class="btn btn-warning btn-lg" href="{{ url_for('new_task') }}" role="button">
+        <i class="fas fa-plus-circle me-2"></i>Create New Task
+    </a>
+    <a class="btn btn-primary btn-lg ms-2" href="{{ url_for('tasks') }}" role="button">
+        <i class="fas fa-tasks me-2"></i>View Tasks
+    </a>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header bg-warning text-dark">
+                <i class="fas fa-bolt me-2"></i>Fast Delivery
+            </div>
+            <div class="card-body">
+                <p class="card-text">Complete your tasks with the speed and efficiency of Amazon Prime delivery.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header bg-warning text-dark">
+                <i class="fas fa-shield-alt me-2"></i>Secure Management
+            </div>
+            <div class="card-body">
+                <p class="card-text">Your tasks are securely stored and managed, just like your Amazon account.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header bg-warning text-dark">
+                <i class="fas fa-chart-line me-2"></i>Track Progress
+            </div>
+            <div class="card-body">
+                <p class="card-text">Monitor your task progress with detailed tracking, just like your Amazon orders.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-5">
+    <h2>Recent Tasks</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks[:5] %}
+                <tr>
+                    <td>{{ task.title }}</td>
+                    <td>
+                        {% if task.priority == 'Low' %}
+                            <span class="badge bg-info">{{ task.priority }}</span>
+                        {% elif task.priority == 'Normal' %}
+                            <span class="badge bg-success">{{ task.priority }}</span>
+                        {% elif task.priority == 'High' %}
+                            <span class="badge bg-warning text-dark">{{ task.priority }}</span>
+                        {% else %}
+                            <span class="badge bg-danger">{{ task.priority }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if task.status == 'To Do' %}
+                            <span class="badge bg-secondary">{{ task.status }}</span>
+                        {% elif task.status == 'In Progress' %}
+                            <span class="badge bg-primary">{{ task.status }}</span>
+                        {% else %}
+                            <span class="badge bg-success">{{ task.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ task.created_at.strftime('%Y-%m-%d') }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="text-center">No tasks found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
